@@ -1,0 +1,111 @@
+
+#******************** Settings ************************
+
+*** Settings ***
+
+
+
+Documentation	Testing the sign up functionality. Sign up test scenario with valid and invalid credentials
+
+
+
+Pre Condition	Open Browser
+Post Condition	Close All Browsers
+Tags Sign_up, TS-2-Sign_up
+
+#******************* Common Variables ********************
+
+*** Variables ***
+
+# NOTE: Please Remove your login credential before uploading Assignments
+
+LoginUrl= https://gitlab.com/users/sign_up
+EmailVerifyUrl= https://gitlab.com/users/identity_verification
+FirstName= XXX
+LastName= YYY
+UserName= ABC
+Password= ********
+Invalid_Password= ***
+Common_Password= 12345678
+Email= xxxyyy@abc.com
+Invalid_email= xxxyyy"abc.com
+Incomplete_email= xxxyyy@abc
+VerificationCode= *****
+Empty= 
+
+#******************** Test Cases *************************
+
+*** Test Case ***
+
+# Positive Tests
+
+
+Register user with valid username and password
+    Navigate To Login Page  LoginUrl
+	Input First name FirstName
+	Input Last name LastName
+    Input Username  UserName
+	Verify that confirmation message should show Username is available
+	Input Email Email
+    Input Password  Password
+    Submit Sign up form
+    Verify Page Should navigate to EmailVerifyUrl
+	Input VerificationCode
+	Verify Page should show task compelted
+	Click the next button 
+	Verify Page should confirm verification and autonavigate to welcome page
+
+
+# Negative Test 
+
+Register user with same above username
+	Navigate To Login Page  LoginUrl
+    Input Username  UserName
+	Verify page should contain User Name is already taken
+
+Register user without username
+	Navigate To Login Page  LoginUrl
+    Input Username  Empty
+	Verify page should contain Please create a username with only alphanumeric characters
+
+Register user with empty first name
+	Navigate To Login Page  LoginUrl
+	Input First name Empty
+	Verify page should contain This field is required
+
+Register user with empty last name
+	Navigate To Login Page  LoginUrl
+	Input Last name Empty
+	Verify page should contain This field is required
+
+Register user with invalid email address
+	Navigate To Login Page  LoginUrl
+	Input email address Invalid_email
+	Verify page should contain please provide a valid email address
+
+Register user with a incomplete email address
+	Navigate To Login Page  LoginUrl
+	Input email address Incomplete_email
+	Verify page should contain Email address without top-level domain. Make sure that you have entered the correct email address
+
+Register user with used email
+	Navigate To Login Page  LoginUrl
+	Input email address Email
+	Submit sign up form
+	Verify page should contain 1 error prohibited this user from being saved: Email address has already been taken
+
+Register user with a password shorter than 8 characters
+	Navigate To Login Page  LoginUrl
+	Input password Invalid_Password
+	Verify page should contain minimum lenght is 8 characters
+
+Register user with common password
+	Navigate To Login Page  LoginUrl
+	Input password Common_Password
+	Submit sign up form
+	Verify page should contain 1 error prohibited this user from being saved: Password must not contain commonly used combination of words and letters
+
+
+
+
+

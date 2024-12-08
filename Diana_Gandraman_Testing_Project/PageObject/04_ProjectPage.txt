@@ -1,0 +1,90 @@
+
+#******************** Settings ************************
+
+*** Settings ***
+
+# TODO: Write Dcocumentation e.g. Project Test scenario. CRUD Operation: Create, Read, Update, Delete
+
+Documentation	
+
+# TODO: Write Precondition, Postcondition, Tags
+
+Pre Condition	 
+	Open Browser
+	Navigate to Login Page LoginUrl
+	Login using UserName and Password
+Post Condition	
+	Logout
+	Close browser
+Tags Project_Page, TS-3-Project_Page
+
+#******************* Common Variables ********************
+
+*** Variables ***
+
+LoginUrl= https://gitlab.com/users/sign_in
+NewProjectUrl= https://gitlab.com/projects/new
+NewTemplateProjectUrl= https://gitlab.com/projects/new#create_from_template
+UserName= ABC
+Password= ********
+ProjectName= Test-Project
+TemplateProjectName= Test-Project2
+UpdateTemplateProjectName= Test-Project2-Updated
+Empty=
+
+
+#******************** Test Cases *************************
+
+*** Test Case ***
+
+
+# Positive Test
+
+	Create blank project
+		Navigate to new project page NewProjectUrl
+		Click Create Blank Project
+		Input project name ProjectName
+		Submit project form
+		Verify page should contain Project "ProjectName" was succesfully created
+
+	Create template project 
+		Navigate to create from template project page NewTemplateProjectUrl
+		Select a template
+		Input project name TemplateProjectName
+		Submit project form
+		Verify page should contain warning message that project is importing 
+		Verify page should contain message that the project was successfully imported
+
+	Update name of template project
+		On the project page click the 3 dots(more actions)
+		Navigate to project settings
+		Input project name UpdateTemplateProjectName
+		Submit project Form
+		Verify page should contain Project "UpdateTemplateProjectName" was succesfully Updated
+
+	Delete template project
+		On the project page click the 3 dots(more actions)
+		Navigate to project settings
+		Navigate to advanced settings
+		Navigate to delete this project
+		Click on delete project
+		Verify page should contain warning popup. Are you absolutely sure? You are about to delete this project containing 0 issues, 0 merged requests, 0 forks, 0 stars. This project is not a fork. This process deletes the project repository and all related resoureces. 
+		Input given text to confirm
+		Submit delete form 
+
+# Negative Test examples are below write test process steps for each below test case
+
+	Create a blank project with the previous same name
+		Navigate to new project page NewProjectUrl
+		Click Create Blank Project
+		Input project name ProjectName
+		Submit project form
+		Verify page should contain warning message. The form contains the following errors: Project namespace has already been taken. Name has already been taken, Path has already been taken.
+
+	Create a blank project with no name
+	Navigate to new project page NewProjectUrl
+		Click Create Blank Project
+		Input project name Empty
+		Verify page should contain Name must start with a letter, digit, emoji or underscore
+
+	

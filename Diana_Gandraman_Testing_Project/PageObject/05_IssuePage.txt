@@ -1,0 +1,80 @@
+
+#******************** Settings ************************
+
+*** Settings ***
+Documentation	Issue Test scenario. CRUD Operation: Create, Read, Update, Delete
+
+# TODO: Write Precondition and Postcondition, Tags 
+
+Pre Condition
+	Open Browser
+	Login 
+	Project must exist
+Post Condition	
+	Logout
+	Close all browsers
+Tags
+Issue, TS-4-Issue
+
+#******************* Common Variables ********************
+
+
+*** Variables ***
+
+IssueName= Test-Issue
+UpdatedIssueName= Test-Issue-Updated
+IssueUrl= https://gitlab.com/gandraman/test-project/-/issues
+Empty=
+
+
+
+#******************** Test Cases *************************
+
+*** Test Case ***
+
+
+# Positive Tests
+
+	Create issue
+		Navigate to issue creation page IssueUrl
+		Click new issue 
+		Input issue name IssueName
+		Submit issue form
+		Verify page must contain issue created x second ago
+
+ 	Update name of issue
+		Click on the edit button
+		Input updated issue name UpdatedIssueName
+		Submit issue changes form
+		Verify page must contain user changed title from IssueName to UpdatedIssueName
+
+	Create second issue with privious updated name
+		Navigate to issue creation page IssueUrl
+		Click new issue 
+		Input issue name IssueName
+		Verify page should contain warning. Similar issues 
+		Submit issue form
+		Verify page must contain issue created x second ago
+
+
+    Delete first issue
+		Navigate to issues page IssueUrl
+		Select first issue
+		Click on 3 dots
+		Click delete issue
+		verify page should show pop up warning. Issue will be removed! Are you sure?
+		Submit delete issue
+		Verify page should show list of issue witout the deleted issue
+
+# Negative Tests
+
+	Create issue with empty name
+		Navigate to issue creation page IssueUrl
+		Click new issue 
+		Input issue name Empty
+		Submit issue form
+		Verify page must contain Title field is required
+
+
+
+
